@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>c7_event_handler</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Demo extends React.Component {
+        /*
+          1. 通過 onXxx 屬性指定事件處理函數(注意大小寫)
+              1. React使用的是自定義(合成)事件, 而不是使用的原生DOM事件是為了更好的兼容性
+              2. React中的事件是通過事件委託方式處理的(委託給組件最外層的元素)是為了的高效
+          2. 通過 event.target 得到發生事件的 DOM 元素對象, 不要過度使用 ref , 官方不建議過度使用 ref
+        */
+        myRef = React.createRef();
+
+        showData1 = () => {
+          const { current } = this.myRef
+          alert(current.value)
+        }
+
+        // 通過事件對象 event 獲取當前節點的值 event.target.value , 可以避免過度的使用 ref , 官方不建議過度使用 ref
+        showData2 = (event) => {
+          const { target } = event;
+          alert(target.value)
+        }
+
+        render() {
+          console.log(`Demo 類組件創建的實例對象 : `, this)
+          return (
+            <div>
+              <input ref={this.myRef} placeholder="點擊按鈕提示數據" />&nbsp;
+              <button onClick={this.showData1}>點我提示左側數據</button>&nbsp;
+              <input onBlur={this.showData2} placeholder="失去焦點提示數據" />
+            </div >
+          )
+        }
+      }
+
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Demo />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

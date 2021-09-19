@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>d8_lifecycle_force_update</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Count extends React.Component {
+        constructor(prop) {
+          console.log('Count - constructor');
+          super(prop);
+        }
+
+        state = { clickCount: 0 };
+
+        // 點擊 +1 按鈕的回調
+        addClickCount = () => {
+          let { clickCount } = this.state;
+          clickCount++;
+          this.setState({ clickCount });
+        }
+
+        // 卸載某個節點的組件: ReactDOM.unmountComponentAtNode(節點)
+        // 卸載組件的回調
+        suicide = () => ReactDOM.unmountComponentAtNode(document.getElementById('test'))
+
+        // 強制更新按鈕的回調
+        // this.forceUpdate() 可以繞過 shouldComponentUpdate 更新組件的閘門強制更新
+        // 所以點擊 'forceUpdate 強制更新' 這個按鈕時不會調用 shouldComponentUpdate 回調函數
+        myForceUpdate = () => this.forceUpdate();
+
+        // 判斷組件應不應該被更新的鉤子 (閥門), 必須返回一個布爾值, 返回 true 時可以更新 state , 返回 false 時可以不允許更新 state
+        // 如果沒有定義此鉤子函數默認 shouldComponentUpdate 函數的返回值為 true
+        shouldComponentUpdate() { console.log('Count - shouldComponentUpdate'); return true; }
+
+        // 組件將要掛載的鉤子
+        componentWillMount() { console.log('Count - componentWillMount'); }
+
+        // 組件即將更新的鉤子
+        componentWillUpdate() { console.log('Count - componentWillUpdate'); }
+
+        // 渲染組件的鉤子
+        render() {
+          console.log('Count - render');
+          const { clickCount } = this.state
+          const { addClickCount, suicide, myForceUpdate } = this
+          return (
+            <div>
+              <h2>目前點擊了{clickCount}次</h2> {/* {屬性: 變數} 當屬性與變數同名時可以簡寫成: {屬性} */}
+              <button onClick={addClickCount}>點我+1</button>
+              <button onClick={suicide}>卸載此組件</button>
+              <button onClick={myForceUpdate}>forceUpdate 強制更新</button>
+            </div>
+          )
+        }
+
+        // 組件已掛載的鉤子
+        componentDidMount() { console.log('Count - componentDidMount'); }
+
+        // 組件已更新的鉤子
+        componentDidUpdate() { console.log('Count - componentDidUpdate'); }
+
+        // 組件將要被卸載
+        componentWillUnmount() { console.log('Count - componentWillUnmount'); }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Count />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

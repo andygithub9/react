@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>d1_js_native_currying_function</title>
+  </head>
+
+  <body>
+    <script type="text/javascript">
+      // 函數的柯理化 : 通過函數調用繼續返回函數的方式, 實現多次接收參數最後統一處理的函數編碼形式
+      const CURRY_MULT_FUNC = function (x) {
+        return function (y) {
+          return function (z) {
+            return x * y * z;
+          }
+        }
+      }
+      console.log(`CURRY_SUM_FUNC(8)(9)(10) : `, CURRY_MULT_FUNC(8)(9)(10));
+
+      /*
+        定義一個 TIMES_10 變量, 調用 CURRY_MULT_FUNC 函數傳遞一個參數 10 , 會返回一個函數, 
+        再將此函數賦給 TIMES_10 變量, TIMES_10 相當於是一個最後返回值一定會乘以 10 的一個函數,
+        可以理解為 : 
+            TIMES_10 = function (y) {
+              return function (z) {
+                return 10 * y * z;
+              }
+            }
+        
+      */
+      const TIMES_10 = CURRY_MULT_FUNC(10);
+      console.log(`TIMES_10 : `, TIMES_10);
+      console.log(`TIMES_10(11)(11) : `, TIMES_10(11)(11));
+
+      const CURRY_SUM_ARROW_FUNC = a => b => c => a + b + c;
+      console.log(`CURRY_SUM_ARROW_FUNC(1)(2)(3) : `, CURRY_SUM_ARROW_FUNC(1)(2)(3));
+    </script>
+
+  </body>
+
+</html>

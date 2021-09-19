@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a7_class_components</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class MyComponent extends React.Component {
+        render() {
+          // render() 方法放在哪裡? 放在類的原型對象 prototype 上, 供實例使用
+          console.log(`render 中的 MyComponent.prototype : `, MyComponent.prototype);
+
+          // render() 方法中的 this 指向誰? MyComponent 創建的組件實例對象
+          console.log(`render 中的 this 指向 MyComponent 創建的實例對象: `, this);
+
+          return (<h2>我是類定義的組件, 適用於複雜組件的定義</h2>);
+        }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<MyComponent />, document.getElementById('test'));
+      /*
+        執行 ReactDOM.render(<MyComponent />, document.getElementById('test')); 後, 發生了甚麼?
+            1. React 解析組件標籤, 根據組件標籤的第一個字元的大小寫判定他是 html 標籤還是 React 組件, 小寫則判定是 html 標籤,
+                大寫則判定是 React 組件, <MyComponent/> 首字母為大寫, React 判定 <MyComponent/> 為 React 組件。
+            2. 發現組件是使用類定義的, 隨後 new 出來該類的實例, 並通過該實例調用到類的原型對象 prototype 上的 render() 方法
+            3. 將 render() 方法返回的虛擬 DOM 轉為真實 DOM , 隨後呈現在頁面中
+      */
+
+    </script>
+
+  </body>
+
+</html>

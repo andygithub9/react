@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>c8_uncontrolled_components</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      // 非受控組件
+      // https://zh-hans.reactjs.org/docs/uncontrolled-components.html#gatsby-focus-wrapper
+      class Demo extends React.Component {
+        submitHandler = (event) => {
+          event.preventDefault(); // 阻止表單提交預設事件
+          const { username, password } = this;
+          alert(`用戶名 : ${username.value} , 密碼 : ${password.value}`);
+        }
+
+        render() {
+          return (
+            <form onSubmit={this.submitHandler}>
+              用戶名 : <input ref={c => this.username = c} name="username" type="text" />
+              密碼 : <input ref={c => this.password = c} name="password" type="password" />
+              <button>登入</button>
+            </form>
+          )
+        }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Demo />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

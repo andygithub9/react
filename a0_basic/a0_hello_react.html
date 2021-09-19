@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a0_hello_react</title>
+  </head>
+
+  <body>
+    <!-- 準備好一個容器 -->
+    <div id="test"></div>
+
+    <!-- 引入 react 核心庫, 並添加一個全局對象 'React', 必須先引入 react 核心庫再引入 react 的其他擴充庫, 例如 : react-dom -->
+    <script src="./js/react.development.js"></script>
+    <!-- 引入 react-dom , 用於支持 react 操作 DOM , 並添加一個全局對象 'ReactDOM' -->
+    <script src="./js/react-dom.development.js"></script>
+    <!-- 引入 babel , 用於將 jsx 轉為 js  -->
+    <script src="./js/babel.js"></script>
+
+    <!-- type="text/babel" 表示我在標籤裡寫的是 jsx , 不是 js -->
+    <script type="text/babel">
+      console.log(`React : `, React)
+      console.log(`ReactDOM : `, ReactDOM);
+      // 1. 創建虛擬 DOM
+      const VDOM = <h1>Hello , React</h1>;
+      console.log(`VDOM : `, VDOM);
+      // 2. 渲染虛擬 DOM 到頁面, ReactDOM.render(虛擬 DOM , 容器節點)
+      ReactDOM.render(VDOM, document.querySelector('#test'));
+    </script>
+
+  </body>
+
+</html>

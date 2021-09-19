@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>c1_function_component_use_props</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建函數式式組件
+      // 在函數式組件的形參列表中定義一個 props 形參, 用來接收組件標籤傳遞過來的屬性
+      function Person(props) {
+        const { name, age, sex } = props
+        return (
+          <ul>
+            <li>姓名 : {name}</li>
+            <li>年齡 : {age + 1}</li>
+            <li>性別 : {sex}</li>
+          </ul>
+        )
+      }
+
+      // 對標籤屬性進行類型和必要性的限制
+      // React 要求在函數式組件添加一個 propTypes 屬性並賦給他一個對象, 再通過 prop-types.js 提供的全局對象 PropTypes 對 props 進行限制
+      // 語法: 函數式組件.propTypes = {屬性: PropTypes.限制規則}
+      Person.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number,
+        sex: PropTypes.string,
+        speak: PropTypes.func
+      }
+
+      // 指定默認標籤屬性值
+      // React 要求在函數式組件添加一個 defaultProps 屬性並賦給他一個對象 : {屬性: 默認值}
+      Person.defaultProps = {
+        sex: '人有妖之心就是人妖',
+        age: -1
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Person name='小紅' age={18} sex='男' />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

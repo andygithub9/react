@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>f0_old_lifecycle_sumup</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      /*
+        1. 初始化階段: 由ReactDoM.render() 觸發 -> 初次渲染
+            1. constructor()
+            2. componentwillMount()
+            3. render()
+            4. componentDidMount() -> 常用
+                一般在這個鉤子中做一些初始化的事, 例如:開啟定時器、 發送網絡請求、 訂閱消息
+        2. 更新階段: 由組件內部 this.setsate() 或組件 render 做觸發發
+            1. shouldComponentupdate()
+            2. componentWillupdate()
+            3. render()
+            4. componentDidUpdate()
+        3. 卸載組件:由ReactDOM.unmountComponentAtNode()觸發
+            1. componentwillUnmount() =====>常用
+                一般在這個鉤子中做一些收尾的事,例如:關閉定時器、取消訂閱消息
+      */
+    </script>
+
+  </body>
+
+</html>

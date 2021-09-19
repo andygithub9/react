@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>d9_lifecycle_component_will_receive_props_and_parent_child_component</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class A extends React.Component {
+        state = { carName: 'Benz' }
+
+        changeCar = () => this.setState({ carName: 'Audi' })
+
+        // 渲染組件的鉤子
+        render() {
+          const { carName } = this.state
+          const { changeCar } = this
+          return (
+            <div>
+              <div>我是 A 組件</div>
+              <button onClick={changeCar}>換車</button>
+              {/* 
+                  將 B 組件以標籤形式放到 A 組件的 JSX 對象中, A 組件就為父組件, B 組件為子組件,
+                  在 B 組件標籤中通過標籤屬性傳遞 props 給 B 組件。
+
+                  A 組件將自己的狀態通過 B 組件標籤中的標籤屬性將 A 組件的狀態傳遞給 B 組件的 props , 
+                  當 A 組件的狀態更新時會傳遞新的狀態到 B 組件的 props , B 組件的 componentWillReceiveProps 回調函數鉤子就會被調用
+              */}
+              <B carName={carName}></B>
+            </div>
+          )
+        }
+      }
+
+      class B extends React.Component {
+        // 組件即將收到 props 的鉤子
+        componentWillReceiveProps() { console.log('B - componentWillReceiveProps'); }
+
+        // 判斷組件應不應該被更新的鉤子 (閥門)
+        shouldComponentUpdate() { console.log('B - shouldComponentUpdate'); return true; }
+
+        // 組件即將更新的鉤子
+        componentWillUpdate() { console.log('B - componentWillUpdate'); }
+
+        // 渲染組件的鉤子
+        render() {
+          const { carName } = this.props
+          return (
+            <div>
+              {carName}
+            </div>
+          )
+        }
+
+        // 組件已更新的鉤子
+        componentDidUpdate() { console.log('B - componentDidUpdate'); }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<A />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

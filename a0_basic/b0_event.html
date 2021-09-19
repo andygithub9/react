@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>b0_event</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Weather extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {};
+          this.state.isHot = true;
+        }
+        render() {
+          const { isHot } = this.state; // 解構賦值
+          // 1. React 不建議給標籤一個 id 再通過 document.getElementById 獲取該元素在綁定事件, 
+          //    React 建議直接在標籤裡寫監聽事件 'on事件 = {函數名}'
+          // 2. 在 React 中在標籤裡監聽事件必須用小駝峰命名法, 例如 : onClick、 onBlur , 不能寫 onlcick
+          // 3. onClick={demo} 是一個賦值語句, 如果寫成 onClick={demo()} 會把 demo() 的返回值 undefined 賦值給 onClick ,
+          //    相當於把 undefined 賦值給 onClick 作為 onClick 的回調函數進而造成錯誤。
+          //    正確的寫法應該是 onClick={demo} 將 'demo' 函數賦值給 onClick 監聽事件的回調函數, 每次 click 都會調用一次回調函數 'demo' 函數
+          return (<h1 onClick={demo}>今天天氣很{isHot ? '炎熱' : '涼爽'}</h1>);
+        }
+      }
+
+      const demo = () => { console.log('標題被點擊了'); }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Weather />, document.getElementById('test'));
+
+    </script>
+
+  </body>
+
+</html>

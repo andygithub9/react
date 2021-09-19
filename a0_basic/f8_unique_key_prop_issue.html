@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>f8_unique_key_prop_issue</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      /*
+        1. react/vue 中的 key 有什麼作用?( key 的內部原理是什麼?)
+        2. 為什麼逾歷列表時, key 最好不要用 index ?
+
+            1. 虛擬 DOM 中 Key 的作用:
+                當狀態中的數據發生變化時, react 會根據 '新數據' 生成 '新的虛擬 DOM ' ,
+                隨後 React 進行 '新虛擬 DOM ' 與 '舊虛擬 DOM ' 的 diff 比較, 比較規則如下:
+                    1. 舊虛擬 DOM 中找到了與新虛擬 DOM 相同的 key :
+                        1. 若虛擬 DOM 中內容沒變, 直接使用之前的真實 DOM
+                        2. 若虛擬 DOM 中內容變了, 則生成新的真實 DOM , 隨後替換掉頁面中之前的真實 DOM
+                    2. 舊虛擬 DOM 中未找到與新虛擬 DOM 相同的 key 根據數據創建新的真實 DOM , 隨後渲染到到頁面
+            2. 用 index 作為 key 可能會引發的問題:
+                1. 若對數據進行: 逆序添加、逆序刪除、中途插入等破壞順序操作:
+                    會產生沒有必要的真實 DOM 更新 -> 界面效果沒問題, 但效率低。
+                2. 如果結構中還包含輸入類的 DOM (input type=text、checkbox...等)
+                    會產生錯誤 DOM 更新 -> 界面有問題。
+            3. 開發中如何選擇 key ?
+                1. 最好使用每條數據的唯一標識作為 key , 比如 id、手機號、身份證號、學號等唯一值。
+      */
+
+      /*
+        使用 index 索引值做為 key 時 React 的底層
+
+            初始數據:
+            id: 1, name: '小紅', age:18,
+            id: 2, name: '小橙', age:19
+            初始的虛擬 DOM :
+            <li key=0>小紅 - 18 - <input type="text" /></li>
+            <li key=1>小橙 - 19 - <input type="text" /></li>
+
+            更新後的數據:
+            id: 1, name: '小黃', age:20,
+            id: 2, name: '小紅', age:18,
+            id: 3, name: '小橙', age:19
+            更新數據後的虛擬 DOM :
+            <li key=0>小黃 - 20 - <input type="text" /></li>
+            <li key=1>小紅 - 18 - <input type="text" /></li>
+            <li key=2>小橙 - 19 - <input type="text" /></li>
+
+            數據更新後開始 diffing 算法比對初始的虛擬 DOM 和 更新數據後的虛擬 DOM , 
+            React 會比對新舊的虛擬 DOM 中 key=XXX 的標籤的內容有沒有發生異動。
+
+            React 比對 key=0 的標籤的內容從 '小紅 - 18 - <input type="text" />' 變成了 '小黃 - 20 - <input type="text" />' , 
+            React 發現虛擬 DOM 中內容變了, 於是生成新的真實 DOM 替換掉頁面中之前的真實 DOM ,
+
+            React 比對 key=1 的標籤, 標籤內容從 '小橙 - 19 - <input type="text" />' 變成了 '小紅 - 18 - <input type="text" />' , 
+            React 發現虛擬 DOM 中內容變了, 於是生成新的真實 DOM 替換掉頁面中之前的真實 DOM ,
+
+            React 比對 key=2 的標籤, 發現舊虛擬 DOM 中未找到 key=2 的標籤, 於是根據新的虛擬 DOM 創建新的真實 DOM , 隨後渲染到到頁面
+
+            結論: 會發現其實小紅跟小橙的數據和虛擬 DOM 都沒有變, 
+                  卻因為 key 屬性的更新強迫小紅跟小橙生成新的真實 DOM 替換掉頁面中之前的真實 DOM ,
+                  造成效率降低, 而原本在小紅裡面的 input 會跟著 key=0 的虛擬 DOM , 所以在更新後, 原本在小紅的 input 跑到了 小黃裡面
+===================================================================================================================================
+===================================================================================================================================
+            使用 id 數據的唯一鍵做為 key 時 React 的底層
+
+            初始數據:
+            id: 1, name: '小紅', age:18,
+            id: 2, name: '小橙', age:19
+            初始的虛擬 DOM :
+            <li key=1>小紅 - 18 - <input type="text" /></li>
+            <li key=2>小橙 - 19 - <input type="text" /></li>
+
+            更新後的數據:
+            id: 1, name: '小黃', age:20,
+            id: 2, name: '小紅', age:18,
+            id: 3, name: '小橙', age:19
+            更新數據後的虛擬 DOM :
+            <li key=3>小黃 - 20 - <input type="text" /></li>
+            <li key=1>小紅 - 18 - <input type="text" /></li>
+            <li key=2>小橙 - 19 - <input type="text" /></li>
+
+            數據更新後開始 diffing 算法比對初始的虛擬 DOM 和 更新數據後的虛擬 DOM , 
+            React 會比對新舊的虛擬 DOM 中 key=XXX 的標籤的內容有沒有發生異動。
+
+            React 比對 key=3 的標籤, 發現舊虛擬 DOM 中未找到 key=3 的標籤, 於是根據新的虛擬 DOM 創建新的真實 DOM , 隨後渲染到到頁面
+            React 比對 key=1 的虛擬 DOM 中內容沒變, 直接使用之前的真實 DOM
+            React 比對 key=2 的虛擬 DOM 中內容沒變, 直接使用之前的真實 DOM
+
+            結論: 使用數據的唯一鍵作為 key 屬性時, 如果數據沒有更新, 可以避免不必要的生成虛擬 DOM 替換真實 DOM ,
+                  也可以避免 input 順序錯亂的情況
+      */
+
+      // 1. 創建類式組件
+      class Person extends React.Component {
+
+        state = { peopleArr: [{ id: 1, name: '小紅', age: 18 }, { id: 2, name: '小橙', age: 19 }] };
+
+        addPerson = () => {
+          const { peopleArr } = this.state;
+          const person = { id: peopleArr.length + 1, name: '小黃', age: 20 }
+          this.setState({ peopleArr: [person, ...peopleArr] })
+        }
+
+        // 渲染組件的鉤子
+        render() {
+          const { peopleArr } = this.state;
+          return (
+            <div>
+              <h1>展示人員信息</h1>
+              <h2>在小紅和小橙的輸入框分別輸入 '小紅' 和 '小橙' 後, 點擊添加小黃的按鈕, 觀察使用 index 數組索引值作為 key 會發生甚麼問題</h2>
+              <h2>小黃被添加到數組的開始而不是結束, 打亂了原本的順序和 key 對應的人員, key=0 原本是小紅, 但是點擊按鈕之後, key=0 找到的卻是小黃, 導致原本在 key=0 的已經輸入的資料 '小紅' 的輸入框會連帶資料渲染到更新後 key=0 的小黃的 li 標籤</h2>
+              <h3>使用 index 數組索引值作為 key</h3>
+              <button onClick={this.addPerson}>添加一個人員 - 小黃</button>
+              <ol>
+                {peopleArr.map((people, idx) => (<li key={idx}>{people.name} - {people.age} - <input type="text" /></li>))}
+              </ol>
+              <hr />
+              <hr />
+              <h3>使用 id 數據的唯一標識作為 key</h3>
+              <button onClick={this.addPerson}>添加一個人員 - 小黃</button>
+              <ol>
+                {peopleArr.map(people => (<li key={people.id}>{people.name} - {people.age} - <input type="text" /></li>))}
+              </ol>
+            </div>
+          )
+        }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Person />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

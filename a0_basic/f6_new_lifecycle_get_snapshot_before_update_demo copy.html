@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>f6_new_lifecycle_get_snapshot_before_update_demo</title>
+    <style>
+      .news-list {
+        width: 200px;
+        height: 150px;
+        background-color: aqua;
+        overflow: auto;
+      }
+
+      .news {
+        height: 30px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class NewsList extends React.Component {
+
+        state = { newsArr: [] };
+        newsListRef = React.createRef();
+
+        // 渲染組件的鉤子
+        render() {
+          const { newsArr } = this.state;
+          return (
+            <div ref={this.newsListRef} className="news-list">
+              {newsArr.map((news, idx) => (<div className="news" key={idx}>{news}</div>))}
+            </div>
+          )
+        }
+
+        // 在更新之前獲取快照
+        getSnapshotBeforeUpdate(prevProps, prevState) {
+          const { scrollHeight } = this.newsListRef.current
+          return scrollHeight
+        }
+
+        // 組件已掛載的鉤子
+        componentDidMount() {
+          console.log(this);
+          setInterval(() => {
+            let { newsArr } = this.state; // 獲取原狀態
+            const news = '新聞' + (newsArr.length + 1); // 創建一條新新聞 -> '新聞' + 目前數組長度+1
+            newsArr = [news, ...newsArr]; // 將上面創建的新聞放到新聞數組的最前面
+            this.setState({ newsArr }); // 更新狀態
+          }, 1000);
+        }
+
+        // 組件已更新的鉤子
+        componentDidUpdate(prevProps, prevState, scrollHeightSnapshot) {
+          let { scrollHeight } = this.newsListRef.current; // 解構賦值
+          // 這邊的 scrollTop 不能用解構賦值, 因為我們要改變的是節點裡的 scrollTop 屬性, 
+          // 如果用解構賦值取出 scrollTop 等同於聲明一個變量再將 scrollTop 的值賦給他, 
+          // 此時的 scrollTop 只是單純的變量, 並不會指向 this.newsListRef.current.scrollTop
+
+          // componentDidMount 鉤子中設置了一個定時器, 每秒會將一則新聞放到 this.state.newsArr 裡,
+          // 通過 render 回調函數鉤子渲染後, 會多一個新聞的 div 到新聞列表的 div 中, 
+          // 此時, 新聞列表的 scrollHeight 增加但是 scrollTop 卻不變, 造成使用者看到的東西一直往下移動(卷軸往上滾動)
+          // 需求: 停止新聞增加造成的滾動
+          // 思路: 通過 getSnapshotBeforeUpdate 回調函數鉤子回傳更新前的高度, 在取得目前的高度, 兩者的差值就是更新造成往上滾動的值, 
+          //        通過 scrollTop 往下滾動相同的值就可以達到停止滾動的效果
+          this.newsListRef.current.scrollTop += scrollHeight - scrollHeightSnapshot;
+        }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<NewsList />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

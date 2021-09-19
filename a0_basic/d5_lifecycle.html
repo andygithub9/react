@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>d5_lifecycle</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Life extends React.Component {
+        // 需求: h2 的透明度慢慢降低, 透明度為 0 的時候再變成 1 出現後, 透明度慢慢降低, 做出類似淡出的動畫
+
+        // 初始化狀態
+        state = { opacity: 1 };
+
+        // 生命週期回調函數
+        // 名詞定義: Mount: 掛載, Unmount: 卸載
+        // 組件已掛載時觸發 componentDidMount 回調函數
+        componentDidMount() {
+          // 將定時器賦給 Life 類創建的實例對象的 timer 屬性
+          this.timer = setInterval(() => {
+            let { opacity } = this.state;
+            if (opacity <= 0) opacity = 1;
+            opacity -= 0.25;
+            // {屬性: 變數} 當屬性與變數同名時可以簡寫成: {屬性}
+            this.setState({ opacity });
+          }, 300);
+        }
+
+        // 組件即將被卸載時觸發 componentWillUnmount 回調函數
+        componentWillUnmount() { clearInterval(this.timer) }
+
+        // 卸載某個節點的組件: ReactDOM.unmountComponentAtNode(節點)
+        suicide = () => ReactDOM.unmountComponentAtNode(document.getElementById('test'))
+
+        render() {
+          const { opacity } = this.state
+          const { suicide } = this
+          return (
+            <div>
+              <h2 style={{ opacity }}>這是一個標題</h2> {/* {屬性: 變數} 當屬性與變數同名時可以簡寫成: {屬性} */}
+              <button onClick={suicide}>卸載此組件</button>
+            </div>
+          )
+        }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Life />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

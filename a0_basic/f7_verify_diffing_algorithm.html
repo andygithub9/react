@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>f7_verify_diffing_algorithm</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Time extends React.Component {
+
+        state = { date: new Date() };
+
+        // 渲染組件的鉤子
+        /*
+          驗證 React 是否真的有使用 diffing 算法:
+              1. diffing 算法會比較更新前的虛擬 DOM 和更新後的虛擬 DOM 哪裡不同, 舊的原封不動只更新有差異的地方到真實 DOM
+              2. 測試方法: 在 componentDidMount 回調函數鉤子寫一個定時器, 每秒更新組件狀態(虛擬 DOM), 測試人員往 input 輸入資料, 
+                            如果輸入的測試資料沒有不見表示 input 並沒有被更新, React 確實有使用 diffing 算法
+        */
+        render() {
+          const { date } = this.state;
+          return (
+            <div>
+              <h1>Hello</h1>
+              <input type="text" />
+              <span>
+                現在是: {date.toTimeString()}
+                <input type="text" />
+              </span>
+            </div>
+          )
+        }
+
+        componentDidMount() {
+          setInterval(() => {
+            this.setState({ date: new Date() })
+          }, 1000);
+        }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Time />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

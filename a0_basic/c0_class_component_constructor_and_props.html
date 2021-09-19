@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>c0_class_component_constructor_and_props</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Person extends React.Component {
+
+        // 參考文件 : https://zh-hans.reactjs.org/docs/react-component.html#constructor
+        // 構造器是否接受 props , 是否傳遞給 super , 取決於是否希望在構造器中通過 this 訪問 props
+        // constructor(props) {
+        //   super(props)
+        //   console.log(this.props);
+        // }
+
+        // bug 重現
+        // 在 React 組件掛載之前，會調用它的構造函數。在為 React.Component 子類實現構造函數時，應在其他語句之前前調用 super(props)。
+        // 否則，this.props 在構造函數中可能會出現未定義的 bug。
+        constructor() {
+          super()
+          console.log(this.props); // undefined
+        }
+
+        // 結論 : 實際開發幾乎不寫構造器
+
+        static propTypes = {
+          name: PropTypes.string.isRequired,
+          age: PropTypes.number,
+          sex: PropTypes.string,
+          speak: PropTypes.func
+        }
+
+        static defaultProps = {
+          sex: '人有妖之心就是人妖',
+          age: -1
+        }
+
+        render() {
+          const { name, age, sex } = this.props
+          return (
+            <ul>
+              <li>姓名 : {name}</li>
+              <li>年齡 : {age + 1}</li>
+              <li>性別 : {sex}</li>
+            </ul>
+          )
+        }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Person name='小紅' age={18} sex='男' />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

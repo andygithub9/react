@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a8_class_components_state</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Weather extends React.Component {
+        // 要使用組件的 state 屬性就必須依照 React 規定的寫一個構造函數並傳入 props 參數
+        constructor(props) {
+          // 子類如果寫了構造函數就必須調用父類構造器, 並依據 React 的規定傳入 props 參數
+          super(props);
+          // this.state 初始化時是 null , 這邊賦給他一個空對象用來存儲以後要用到的數據
+          this.state = {};
+          this.state.isHot = true;
+        }
+        render() {
+          const { isHot } = this.state; // 解構賦值
+          return (<h1>今天天氣很{isHot ? '炎熱' : '涼爽'}</h1>);
+        }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Weather />, document.getElementById('test'));
+
+    </script>
+
+  </body>
+
+</html>

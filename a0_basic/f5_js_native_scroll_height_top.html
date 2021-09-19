@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>f5_js_native_scroll_height_top</title>
+    <style>
+      .news-list {
+        width: 200px;
+        height: 150px;
+        background-color: aqua;
+        overflow: auto;
+      }
+
+      .news {
+        height: 30px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="news-list">
+      <div class="news">新聞9</div>
+      <div class="news">新聞8</div>
+      <div class="news">新聞7</div>
+      <div class="news">新聞6</div>
+      <div class="news">新聞5</div>
+      <div class="news">新聞4</div>
+      <div class="news">新聞3</div>
+      <div class="news">新聞2</div>
+      <div class="news">新聞1</div>
+    </div>
+
+    <script>
+      const newsList = document.getElementsByClassName('news-list')[0];
+
+      // newsList['scrollHeight'] 獲取 newsList 的卷軸高度
+      console.log(`newsList['scrollHeight'] : `, newsList['scrollHeight'])
+
+      // newsList['scrollTop'] 可以控制往下滾動多少 px
+      // newsList['scrollTop'] = 30
+      // newsList['scrollTop'] = 60
+      // newsList['scrollTop'] = 90
+    </script>
+
+  </body>
+
+</html>

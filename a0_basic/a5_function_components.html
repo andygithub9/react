@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a5_function_components</title>
+  </head>
+
+  <body>
+    <!-- 準備好一個容器 -->
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+
+    <script type="text/babel">
+
+      // 1. 創建函數式組件, 函數首字母必須大寫
+      function MyComponent() {
+        // 此處的 this 是 undefined , 因為 babel 編譯後開啟了嚴格模式, 嚴格模式中 this 不會指向 window , 就會變成 undefined
+        console.log(`函數式組件的 this : `, this);
+        return (<h2>我是函數定義的組件, 適用於簡單組件的定義</h2>);
+      }
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<MyComponent />, document.getElementById('test'));
+      /*
+        執行 ReactDOM.render(<MyComponent />, document.getElementById('test')); 後, 發生了甚麼?
+            1. React 解析組件標籤, 根據組件標籤的第一個字元的大小寫判定他是 html 標籤還是 React 組件, 小寫則判定是 html 標籤,
+                大寫則判定是 React 組件, <MyComponent/> 首字母為大寫, React 判定 <MyComponent/> 為 React 組件。
+            2. 發現組件是使用函數定義的, 隨後調用該函數, 將該返回的虛擬 DOM 轉為真實 DOM , 隨後呈現在頁面中
+      */
+
+    </script>
+
+  </body>
+
+</html>

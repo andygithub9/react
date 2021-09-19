@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>d2_when_event_triggered_use_currying_func_pass_param</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      // 受控組件
+      // https://zh-hans.reactjs.org/docs/forms.html#controlled-components
+      class Demo extends React.Component {
+        // 初始化狀態
+        state = {
+          username: '',
+          password: ''
+        }
+
+        submitHandler = (event) => {
+          event.preventDefault(); // 阻止表單提交預設事件
+          const { username, password } = this.state;
+          alert(`用戶名 : ${username} , 密碼 : ${password}`);
+        }
+
+        /*
+          高階函數: 如果一個函數符合下面 2 個規範中的任何一個, 那該函數就是高階函數。
+              1. 若 A 函數, 接收的參數是一個函數, 那麼 A 就可以稱之為高階函數。
+              2. 若 A 函數, 調用的返回值依然是一個函數, 那麼 A 就可以稱之為高階函數。
+              3. 常見的高階函數有: Promise、 setTimeout、 arr.map() 等等
+
+          函數的柯里化 : 通過函數調用繼續返回函數的方式, 實現多次接收參數最後統一處理的函數編碼形式。
+        */
+        submitFormData = (dataType) => {
+          return (event) => {
+            const { value } = event.target;
+            this.setState({ [dataType]: value });
+          }
+        }
+
+        render() {
+          return (
+            <form onSubmit={this.submitHandler}>
+              {/* 
+                  onChange={this.submitFormData} 的意思是以 Demo 類創建的實例對象上的 submitFormData 函數作為 onChange 回調函數。
+                  onChange={this.submitFormData()} 的意思是以 Demo 類實例對象上的 submitFormData 函數的返回值作為 onChange 回調函數。
+                  所以想讓 onChange 事件觸發時調用 submitFormData 函數時傳遞參數就必須讓返回值是一個函數。
+                  onChange 事件觸發時調用的是 submitFormData 函數的返回值, 
+                  所以 onChange 事件觸發時默認傳遞的事件對象會由 submitFormData 返回的函數接收
+
+                  submitFormData = (dataType) => { // onChange 事件觸發時會調用此函數並以此函數的返回值作為 onChange 事件的回調函數
+                    return (event) => { // 作為 onChange 事件的回調函數, 事件的回調函數默認會在形參中接收到該事件的事件對象
+                      const { value } = event.target;
+                      this.setState({ [dataType]: value });
+                    }
+                  }
+              */}
+              用戶名 : <input onChange={this.submitFormData("username")} name="username" type="text" />
+              密碼 : <input onChange={this.submitFormData("password")} name="password" type="password" />
+              <button>登入</button>
+            </form>
+          )
+        }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Demo />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

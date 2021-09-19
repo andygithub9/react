@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>d0_js_native_object</title>
+  </head>
+
+  <body>
+    <script type="text/javascript">
+      const a = 'name';
+      console.log(`直接寫 a : `, { a: 'andy' }) // 直接寫 a 會被當作是字符串
+      console.log(`中括號 a : `, { [a]: 'andy' }) // 要加中括號 a 才會被視為變量
+
+      let obj = {};
+      let obj1 = {};
+      obj.a = 'andy';
+      obj1[a] = 'andy';
+      console.log(`直接寫 a : `, obj) // 直接寫 a 會被當作是字符串
+      console.log(`中括號 a : `, obj1) // 要加中括號 a 才會被視為變量
+    </script>
+
+  </body>
+
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>b3_setstate</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Weather extends React.Component {
+        // 構造器調用幾次? 1 次, ReactDOM.render(<Weather />); 實例化了 1 次 Weather 組件, 所以 Weather 的構造函數被調用了一次
+        constructor(props) {
+          super(props);
+          this.state = { isHot: true, wind: '微風' };
+          this.changeWeather = this.changeWeather.bind(this)
+        }
+
+        // render() 方法被調用幾次? 1 + n 次, 1 是初始化時將返回值渲染到頁面, n 是更新狀態重新渲染頁面的次數
+        render() {
+          const { isHot, wind } = this.state; // 通過解構賦值讀取狀態
+          return (<h1 onClick={this.changeWeather}>今天天氣很{isHot ? '炎熱' : '涼爽'}, 風的強度為{wind}</h1>);
+        }
+
+        // changeWeather() 方法被調用幾次? 點幾次調幾次
+        changeWeather() {
+          const { isHot } = this.state;
+          // 注意 : 狀態不能被直接修改, 要通過 React.Component 的 API : setState() 方法
+          // this.state.isHot = !isHot; // 錯誤的寫法, 開啟 reace devtool 會發現組件的 state 沒有被改變
+
+          // 必須按照 react 的規則使用組件實例對象上的 setState 方法去更新狀態
+          // setState() 方法放在哪裡? 放在 this 組件實例對象的原型對象 class Weather , class Weather 的原型對象 React.Component 的方法
+          // class Weather 繼承 React.Component 也就是 class Weather 的原型對象是 React.Component , React.Component 中存放 setState 方法
+          // 通過 setState() 方法更新狀態會直接以 setState() 方法中的參數對象替換掉原本 this.state 指向的對象嗎 ?
+          // 答案是不會, setState() 方法會依據傳入的參數對象判斷 this.state 中有哪些屬性被更新, 並不會將 this.state 指向的對象整個替換掉
+          // 以下面代碼為例, 只更新 this.state.isHot 的值, 並不會影響到 this.state.wind
+          this.setState({ isHot: !isHot });
+        }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Weather />, document.getElementById('test'));
+      /*
+        渲染頁面的流程 :
+            1. ReactDOM.render(<Weather />, document.getElementById('test'));
+                將 <Weather /> 實例化, 實例化時會調用一次 class Weather 的 constructor , 拿到 Weather 組件實例對象後,
+                調用 Weather 組件實例對象的 render() 方法將返回值渲染到頁面
+            2. 當 click <Weather /> 時觸發 this.changeWeather() 方法,
+                this.changeWeather() 方法通過 react 提供的 setState() 方法更新 Weather 組件實例對象的狀態,
+                react 發現 Weather 組件實例對象的狀態被更新時, 再次調用 Weather 組件實例對象的 render() 方法將返回值渲染到頁面
+
+        小結 :
+            1. 寫構造函數是為了初始化 state 和解決事件觸發的回調函數 this 指向丟失的問題
+            2. render() 方法用來讀取狀態, 再根據狀態的值渲染頁面
+            3. changeWeather() 方法作為 onClick 的回調函數, 用來獲取目前狀態值再通過調用 setState() 更新狀態  
+      */
+
+    </script>
+
+  </body>
+
+</html>

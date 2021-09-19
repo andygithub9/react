@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>b1_js_native_where_does_this_point</title>
+  </head>
+
+  <body>
+
+    <script>
+      console.log(' ===================== 類中的方法中的 this 指向誰 ===================== ');
+      class Student {
+        // study() 方法放在哪裡? 放在類的原型對象 prototype 上, 供實例使用
+        // study() 方法中的 this 指向誰? Student 類創建的實例對象
+        study() {
+          // 'use strict'; // 隱藏代碼, class 中的方法會自動使用嚴格模式 'use strict'
+          console.log(this)
+        }
+      }
+
+      // new Student() 會在堆中創建一個 Student 類的實例對象(記憶體位址: 0x11), 此實例對象中存放一個方法 study() , 再將此實例對象賦給棧中的 s1 指針 
+      const s1 = new Student();
+      // s1 自身並沒有 study() 方法, 但是順著原型鍊 prototype 往上找, 會找到 Student 類, Student 類中有 study() 方法, 也就可以調用 study() 方法。
+      // 通過棧中的 s1 指針調用 study() 方法時, study() 方法中的 this 指向的是 Student 類創建的實例對象, 也就是 s1
+      s1.study(); // Student {} 實例對象
+
+      // 將 s1.study() 方法直接賦給 X 指針並直接調用沒有通過實例調用, X 指向的並不是 Student 的實例對象, 而是 s1.study 方法, 
+      // 方法中的 this 指向默認是 Window 對象,
+      // 但是 class 中的方法默認使用嚴格模式, 嚴格模式中的 this 默認是 undefined , 所以輸出是 undefined 。
+      // 也就是不通過實例對象調用實例方法, 而是直接調用類的實例方法時會照成 this 指向的丟失
+      const X = s1.study;
+      X(); // undefined
+      /*
+        通過實例調用方法 : 實例.方法();
+        直接調用函數 : 函數名();
+      */
+
+      // 通過 bind() 方法綁定 this 的指向
+      // bind() 方法會返回一個函數, 同時可以通過參數傳遞指定 this 要指向誰, 
+      // 這邊將 X = s1.study 方法通過 bind 方法將返回的函數的 this 綁定為 s1 , s1 是 Student 類的實例對象,
+      // 所以輸出的是 Student {} 類的實例對象
+      const X_BIND_s1_instance = X.bind(s1);
+      X_BIND_s1_instance(); // Student {} 實例對象
+
+      console.log(' ===================== 嚴格模式下的 this 指向誰 ===================== ');
+      // 非嚴格模式中的 this 默認指向 Window
+      function run() {
+        console.log(this);
+      }
+      run(); // Window {window: Window, self: Window, document: document, name: "", location: Location, …}
+
+      // 嚴格模式中的 this 默認是 undefined
+      function runUseStrict() {
+        'use strict';
+        console.log(this);
+      }
+      runUseStrict(); // undefined
+
+      console.log(' ===================== 類的實例方法的調用本類的其他實例方法必須通過 this ===================== ');
+      class People {
+        // run() 方法放在哪裡? 放在 People 類的原型對象 prototype 上, 供類創建的實例使用
+        // run() 方法中的 this 指向誰? People 類創建的組件實例對象
+        run() { console.log('有人在跑步'); }
+
+        move() {
+          console.log('有人做出了動作');
+          // run() 方法是給 People 類創建的實例使用
+          // 而 this 指向的就是 People 類創建的實例
+          // 所以要調用實例方法 run() 必須先找到指向實例對象的 this , 再通過 this 調用實例對象上的 run() 方法
+          this.run()
+        }
+      }
+      const people = new People();
+      people.move();
+
+    </script>
+
+  </body>
+
+</html>

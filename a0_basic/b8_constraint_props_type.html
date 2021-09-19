@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>b8_constraint_props_type</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+    <div id="test1"></div>
+    <div id="test2"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <!-- 引入 prop-types , 用於限制 props 傳入的類型 , 並添加一個全局對象 'PropTypes' -->
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Person extends React.Component {
+        render() {
+          console.log(this);
+          const { name, age, sex } = this.props // 解構賦值
+          return (
+            <ul>
+              <li>姓名 : {name}</li>
+              <li>年齡 : {age + 1}</li> {/* 所有年齡在顯示時都要 +1 */}
+              <li>性別 : {sex}</li>
+            </ul>
+          )
+        }
+      }
+      // 對標籤屬性進行類型和必要性的限制
+      // React 規定要在類式組件上添加一個 propTypes 屬性用於限制屬性, 此屬性指向一個對象 : {被限制的屬性名: PropTypes.限制規則}
+      // 注意 : 開頭小寫字母的 propTypes 是類式組件的屬性, 開頭大寫字母的 PropTypes 是套件引入的全局對象
+      Person.propTypes = {
+        name: PropTypes.string.isRequired, // 限制 name 為字符串, isRequired 必傳
+        age: PropTypes.number, // 限制 age 為數值
+        sex: PropTypes.string, // 限制 sex 為數值
+        speak: PropTypes.func // 限制 speak 為函數
+      }
+
+      // 指定默認標籤屬性值
+      // React 規定要在類式組件上添加一個 defaultProps 屬性用於給屬性一個默認值, 此屬性指向一個對象 : {屬性名: 默認值}
+      Person.defaultProps = {
+        sex: '人有妖之心就是人妖', // sex 默認值為 '人有妖之心就是人妖'
+        age: -1 // age 默認值為 -1
+      }
+
+      // 2. 渲染組件到頁面
+      // 組件標籤上的屬性和屬性值會傳到 Person 組件實例對象的 props 屬性
+      // jsx 語法可以通過大括弧傳遞數值給 Person 組件實例對象的 props 屬性
+      ReactDOM.render(<Person name='小紅' age={18} sex='男' speak={speak} />, document.getElementById('test'));
+      ReactDOM.render(<Person name='小成' age={19} />, document.getElementById('test1'));
+      const ajaxRes = { name: '小黃', sex: '女' };
+      ReactDOM.render(<Person {...ajaxRes} />, document.getElementById('test2'));
+
+      function speak() { console.log('我說話了'); }
+    </script>
+
+  </body>
+
+</html>

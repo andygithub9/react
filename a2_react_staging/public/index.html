@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+
+    <!-- 用於描述網站信息, 搜索引擎在收錄你的網站時會看這裡面的描述 -->
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+    <!-- 應用加殼 pwa 的配置文件, 應用加殼 pwa 指的就是在 web 應用外面包上一層 apk 的殼, 使 web 應用可以變成手機應用 -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>React App</title>
+
+    <!-- 成型的第三方樣式庫最好放在 public 裡面 -->
+    <!-- git 用戶搜索 demo 用的 bootstrap.css , 不用的時候記得關掉 -->
+    <link rel="stylesheet" href="%PUBLIC_URL%/css/bootstrap.css" />
+
+    <style>
+      /* 用來 demo App.js 裡面的 NavLink */
+      .navlink-demo {
+        background-color: orange !important;
+        color: white !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- 如果訪問此網頁的瀏覽器不支援 js 則顯示 noscript 標籤中的內容 -->
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

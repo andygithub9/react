@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>f9_js_native_dsestructuring_assignment</title>
+  </head>
+
+  <body>
+
+    <script type="text/javascript">
+      // 單層解構賦值
+      const obj = { a: 1 };
+      const { a } = obj;
+      console.log(`a : `, a);
+
+      // 連續解構賦值
+      const obj1 = { a: { b: { c: 2 } } };
+      const { a: { b: { c } } } = obj1;
+      console.log(`c : `, c);
+
+      // 連續解構賦值 + 重命名
+      const obj2 = { a: { b: { c: 3 } } };
+      const { a: { b: { c: renamedC } } } = obj2;
+      console.log(`renamedC : `, renamedC);
+
+    </script>
+
+  </body>
+
+</html>

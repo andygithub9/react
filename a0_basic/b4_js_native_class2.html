@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a6_js_class</title>
+  </head>
+
+  <body>
+    <script type="text/javascript">
+      class Car {
+        constructor(name, price) {
+          this.name = name;
+          this.price = price;
+        }
+        wheel = 4; // 直接用賦值語句給 class Car 創建的實例對象添加 wheel 屬性, 賦值 4 給 wheel 屬性
+        // static 關鍵字可以將後面的賦值語句賦給 Car 類本身, 而不是賦給 class Car 創建的實例對象, 也就是定義一個靜態屬性(類屬性)
+        static window = 6;
+
+        // go() 方法會在哪裡? Car 類創建的實例對象的原型對象上
+        go() {
+          console.log(`go 方法的 this : `, this);
+        }
+
+        // stop() 方法會在哪裡? 因為下面是賦值語句, 將函數賦值給 stop 屬性, 
+        // stop 會在 Car 類創建的實例對象本身上而不是 Car 類創建的實例對象的原型對象上,
+        // 但是因為默認開啟嚴格模式直接調用 stop 的 this 還是指向 undefined 
+        stop = function () {
+          console.log(`stop 方法的 this : `, this);
+        }
+
+        // 箭頭函數本身沒有 this , 箭頭函數會抓外層的 this 作為箭頭函數的 this , 外層的 this 指向的就是 Car 類創建的實例對象,
+        // 所以箭頭函數會抓 Car 類創建的實例對象作為此箭頭函數的 this 指向, 再將此箭頭函數賦給 back 屬性,
+        // back 屬性指向的箭頭函數的 this 就會指向 Car 類創建的實例對象
+        back = () => {
+          console.log(`back 方法的 this : `, this);
+        }
+
+      }
+
+      console.log(`Car.window : `, Car.window);
+
+      const c1 = new Car('Benz', 100);
+      const c2 = new Car('BMW', 99);
+      console.log(c1); // Car {wheel: 4, name: "Benz", price: 100, stop: ƒ, back: ƒ}
+      console.log(c2); // Car {wheel: 4, name: "BMW", price: 99, stop: ƒ, back: ƒ}
+
+      const c1GoMethod = c1.go;
+      c1GoMethod(); // undefined
+
+      const c1StopMethod = c1.stop;
+      c1StopMethod(); // undefined
+
+      const c1BackMethod = c1.back;
+      c1BackMethod(); // Car {wheel: 4, name: "Benz", price: 100, stop: ƒ, back: ƒ}
+
+      const c2BackMethod = c2.back;
+      c2BackMethod(); // Car {wheel: 4, name: "BMW", price: 99, stop: ƒ, back: ƒ}
+
+
+    </script>
+
+  </body>
+
+</html>

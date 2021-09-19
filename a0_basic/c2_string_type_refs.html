@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>c2_string_type_refs</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Demo extends React.Component {
+        showData1 = () => {
+          const { input1 } = this.refs;
+          alert(input1.value)
+        }
+        showData2 = () => {
+          const { input2 } = this.refs;
+          alert(input2.value)
+        }
+        render() {
+          // ref 用作於一個節點的標識, 可以通過 this.refs 獲取有 ref 標識的節點, 類似原生 JS 通過 DOM 的 id 獲取節點, React 通過 refs 獲取節點
+          // React 會將所有 jsx 對象上有 ref 屬性標識的標籤集中到一個對象存放到 this.refs 屬性中
+          // 注意 : React 不推薦使用字符串類型的 ref , 在未來很可能直接廢棄字符串類型的 ref , 因為字符串類型的 ref 存在著效率問題
+          // https://zh-hans.reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs
+          console.log(`Demo 類組件創建的實例對象 : `, this)
+          return (
+            <div>
+              <input ref="input1" placeholder="點擊按鈕提示數據" />&nbsp;
+              <button ref="btn1" onClick={this.showData1}>點我提示左側數據</button>&nbsp;
+              <input ref="input2" onBlur={this.showData2} placeholder="失去焦點提示數據" />
+            </div>
+          )
+        }
+      }
+
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Demo />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

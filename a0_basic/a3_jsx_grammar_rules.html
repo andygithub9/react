@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a3_jsx_grammar_rules</title>
+    <style>
+      .orange-title {
+        background-color: orange;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- 準備好一個容器 -->
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+
+    <script type="text/babel">
+      /*
+        jsx 語法規則:
+            1. 定義虛擬 DOM 時, 不要寫引號。
+            2. 標籤中混入 JS 表達式時要用大括號 '{}'。
+            3. 樣式的類名指定不要用 class , 要用 className , 因為 class 在 JS 中是關鍵字。
+            4. 內聯樣式要用 style = {{key: value}} 的形式去寫。 外面的大括號是表示裡面的的內容是 JS 語法, 裡面的是 JS 的對象
+            5. 只有一個根標籤
+            6. 標籤必須閉合
+            7. 標籤首字母
+                1. 若小寫字母開頭, 則將改標籤轉為 html 中同名元素, 若 html 中無該標籤對應的同名元素則報錯。
+                2. 若大寫字母開頭, react 就去渲染對應的組件, 若組件沒有定義則報錯。
+      */
+      let count = 0;
+      const myTitle = 'TITLE';
+      const myData = 'Hello , React';
+      const myStyle = { color: 'white', fontSize: '5rem' };
+      const VDOM = (
+        <div>
+          {/* 標籤中混入 JS 表達式時要用 '{}' , 樣式的類名指定不要用 class , 要用 className , 因為 class 在 JS 中是關鍵字 */}
+          <h1 className="orange-title" id={myTitle.toLocaleLowerCase() + count++}>
+            {/* 內聯樣式要用 style = {{key: value}} 的形式去寫。 外面的大括號是表示裡面的的內容是 JS 語法, 裡面的是 JS 的對象 */}
+            {/* value 的烤肉串命名法要改成小駝峰命名法 */}
+            <span style={{ color: 'white', fontSize: '5rem' }}>{myData + count}</span>
+          </h1>
+          <input type="text" />{/* 標籤必須閉合 */}
+          <h1 className="orange-title" id={myTitle.toLocaleLowerCase() + count++}>
+            <span style={myStyle}>{myData + count}</span>
+          </h1>
+          {/* 
+            若標籤以小寫字母開頭, 則 bable 編譯 jsx 時會將該標籤轉為 html 中同名元素, 若 html 中無該標籤對應的同名元素則報錯。 
+            The tag <test> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter. 翻譯 : browser 不認識 <test> 標籤。 如果你是想渲染一個 React component , 則標籤名的開頭字母應該要是大寫
+          */}
+          {/* <test></test> */}
+          {/* 
+            若標籤以大寫字母開頭, react 就去渲染對應的組件, 若組件沒有定義則報錯。
+            Inline Babel script:35 Uncaught ReferenceError: Test is not defined 
+            Test 沒有被定義
+          */}
+          {/* <Test></Test> */}
+        </div>
+      );
+      ReactDOM.render(VDOM, document.getElementById('test'));
+
+    </script>
+
+  </body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>d3_event_triggered_pass_param_without_currying_func</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      // 受控組件
+      // https://zh-hans.reactjs.org/docs/forms.html#controlled-components
+      class Demo extends React.Component {
+        // 初始化狀態
+        state = {
+          username: '',
+          password: ''
+        }
+
+        submitHandler = (event) => {
+          event.preventDefault(); // 阻止表單提交預設事件
+          const { username, password } = this.state;
+          alert(`用戶名 : ${username} , 密碼 : ${password}`);
+        }
+
+        submitFormData = (dataType, event) => {
+          const { value } = event.target;
+          this.setState({ [dataType]: value });
+        }
+
+        render() {
+          return (
+            <form onSubmit={this.submitHandler}>
+              {/* 
+                  直接將函數賦值給 onChange 事件作為 onChange 事件的回調函數, 可以不使用柯理化函數就能達到傳參的目的,  
+                  使用柯理化函數作為事件回調函數傳參和直接賦值函數作為事件回調函數傳參兩者實務上都會用到
+              */}
+              用戶名 : <input onChange={event => this.submitFormData("username", event)} name="username" type="text" />
+              密碼 : <input onChange={event => this.submitFormData("password", event)} name="password" type="password" />
+              <button>登入</button>
+            </form>
+          )
+        }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Demo />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

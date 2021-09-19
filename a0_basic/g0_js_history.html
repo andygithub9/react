@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>g0_js_history</title>
+  </head>
+
+  <body>
+    <!--  onclick="return false" 可以阻止頁面跳轉-->
+    <!-- <a href="http://www.atguigu.com" onclick="return false">push test1</a><br/><br/> -->
+
+    <a href="http://www.atguigu.com" onclick="return push('/tset1')">push test1</a><br /><br />
+    <button onclick="push('/test2')">push test2</button><br /><br />
+    <button onclick="replace('/test3')">replace test3</button><br /><br />
+    <button onclick="back()">回退</button><br /><br />
+    <button onclick="forward('/test2')">前進</button><br /><br />
+
+    <script src="https://cdn.bootcss.com/history/4.7.2/history.js"></script>
+    <script type="text/javascript">
+      let history = History.createBrowserHistory(); // 方法一: 直接使用 HTML5 推出的 History 身上的 API 
+      // let history = History.createHashHistory(); // 方法二: 使用 Hash 值(錨點), 在地址後面加上#XXX
+      function push(path) { history.push(path); return false; }
+      function replace(path) { history.replace(path); }
+      function back(path) { history.goBack(path); }
+      function forward(path) { history.goForward(path); }
+      history.listen(location => {
+        console.log('請求路由的路徑變化了', location);
+        console.log('window.history : ', window.history);
+      })
+
+    </script>
+
+  </body>
+
+</html>

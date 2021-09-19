@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a6_js_class</title>
+  </head>
+
+  <body>
+    <script type="text/javascript">
+
+      // 創建一個 Person 類
+      class Person {
+        // 構造器方法
+        constructor(name, age) {
+          // 構造器方法裡的 this 指向的是這個類創建的實例對象
+          this.name = name;
+          this.age = age;
+        }
+
+        // 一般方法
+        speak() {
+          // speak() 方法放在哪裡? 放在類的原型對象 prototype 上, 供實例使用
+          // 通過 Person 實例調用 speak() 方法時, speak() 方法中的 this 就是 Person 實例
+          console.log(`我是${this.name}, 今年 ${this.age} 歲`)
+        }
+      }
+      // 創建 Person 的實例對象
+      const person = new Person('小紅', 18);
+      person.speak();
+
+      const person1 = new Person('小成', 19);
+      person1.speak();
+
+      // speak() 方法放在哪裡? 放在類的原型對象 prototype 上, 供實例使用
+      // prototype 的參考資料 : https://segmentfault.com/a/1190000011801127 
+      console.log(Person.prototype)
+
+      // 通過 Person 實例調用 speak() 方法時, speak() 方法中的 this 就是 Person 實例
+      // Function.prototype.call(改變調用者的 this 指向)
+      // 如果使用 call() 方法調用時改變 this 的指向, speak() 方法中的 this 指向的就是調用 call() 方法時的第一個參數
+      // https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Function/call
+      person1.speak.call({ prop: 'xxx', prop1: 'ooo' }); // this 指向 { prop: 'xxx', prop1: 'ooo' }
+      person1.speak.call({ name: '小黃', age: '20' }); // this 指向{ name: '小黃', age: '20' }
+
+      console.log('============================== 繼承 ==============================')
+      // 創建一個 Student 類繼承 Person 類
+      class Student extends Person {
+        // 如果一個派生類(子類)中有構造函數就必須調用 super
+        // Uncaught ReferenceError: Must call super constructor in derived class before accessing 'this'
+        // 在訪問 'this' 前必須在派生類中調用 super 構造函數
+        constructor(studentName, studentAge, grade) {
+          super(studentName, studentAge);
+          this.grade = grade;
+        }
+
+        // 重寫從父類繼承過來的方法
+        speak() {
+          console.log(`我是${this.name}, 今年 ${this.age} 歲, 目前在讀${this.grade}`)
+        }
+
+        study() {
+          // study() 方法放在哪裡? 放在類的原型對象 __proto__ 上, 供實例使用
+          // 通過 Student 實例調用 study() 方法時, study() 方法中的 this 就是 Student 實例
+          console.log('我在認真學習');
+        }
+      }
+      const student = new Student('小蘭', 21, '大學一年級');
+      console.log(student);
+      student.speak();
+
+      /*
+        總結:
+            1. 類中的構造器不是必須寫的, 要對實例進行一些初始化的操作, 如添加指定屬性時才寫。
+            2. 子類繼承了父類, 且子類中寫了構造器, 那麼子類構造器中的 super 是必須要調用的。
+            3. 類中所定義的方法都是放在了類的原型對像 __proto__ 上, 供實例去使用
+      */
+
+    </script>
+
+  </body>
+
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a9_js_native_three_ways_listen_event</title>
+  </head>
+
+  <body>
+
+    <button id="btn1">按鈕1</button>
+    <button id="btn2">按鈕2</button>
+    <button onclick="demo()">按鈕3</button>
+
+    <script>
+      const btn1 = document.getElementById('btn1');
+      btn1.addEventListener('click', function () {
+        alert('你按下了按鈕1')
+      })
+
+      const btn2 = document.getElementById('btn2');
+      btn2.onclick = function () {
+        alert('你按下了按鈕2')
+      }
+
+      function demo() { alert('你按下了按鈕3') }
+    </script>
+
+  </body>
+
+</html>

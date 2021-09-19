@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>c3_callback_function_type_refs</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Demo extends React.Component {
+        showData1 = () => {
+          const { input1 } = this;
+          alert(input1.value)
+        }
+        showData2 = () => {
+          const { input2 } = this;
+          alert(input2.value)
+        }
+        render() {
+          /*
+            https://developer.mozilla.org/zh-TW/docs/Glossary/Callback_function
+            回調函數 : 
+                1. 你定義了一個函數, 你沒調用他, 由別人調用他
+                2. 回調函數能收到甚麼參數取決於他被誰調用
+                3. 範例 :
+                    function greeting(name) {
+                      alert('Hello ' + name);
+                    }
+                    function processUserInput(callback) {
+                      var name = prompt('輸入你的名字：');
+                      callback(name);
+                    }
+                    processUserInput(greeting); 
+                    1. 調用 processUserInput 函數並傳遞 greeting 函數作為 processUserInput 函數的參數
+                    2. processUserInput 函數執行 : var name = prompt('輸入你的名字：'); 跳出輸入框等待使用者輸入完畢後取得 name
+                    3. processUserInput 函數執行 : callback(name); callback 是形參實際傳遞進來的是 greeting 函數,
+                        greeting 函數作為回調函數被調用, 並接收到 name 參數
+                    4. greeting 函數執行 : alert('Hello ' + name); name 變量是在 processUserInput 函數中定義的, 
+                        也就是回調函數能收到的參數就是調用者中有的變量
+          */
+
+          console.log(`Demo 類組件創建的實例對象 : `, this)
+          return (
+            <div>
+              {/* 通過回調函數取得目前所在的節點, 再將此節點賦給 this.input1 , 也就是 Demo 類式組件實例的 input1 屬性 */}
+              <input ref={currentNode => this.input1 = currentNode} placeholder="點擊按鈕提示數據" />&nbsp;
+              <button ref="btn1" onClick={this.showData1}>點我提示左側數據</button>&nbsp;
+              <input ref={currentNode => this.input2 = currentNode} onBlur={this.showData2} placeholder="失去焦點提示數據" />
+            </div>
+          )
+        }
+      }
+
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Demo />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

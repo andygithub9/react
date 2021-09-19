@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a2_virtual_dom_vs_real_dom</title>
+  </head>
+
+  <body>
+    <!-- 準備好一個容器 -->
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+
+    <script type="text/babel">
+      const VDOM = (
+        <h1 id="title">
+          <span>Hello , React</span>
+        </h1>
+      );
+      const REAL_DOM = document.getElementById('test')
+      console.log(`VDOM : `, VDOM);
+      console.log(`typeof VDOM : `, typeof VDOM);
+      console.log(`REAL_DOM : `, REAL_DOM);
+      console.log(`typeof REAL_DOM : `, typeof REAL_DOM);
+      // 使用 debugger 打斷點, 鼠標移動到 VDOM 和 REAL_DOM 上面觀察他們的屬性, 會發現虛擬虛擬 DOM 的屬性較少, 較為輕量級
+      debugger;
+
+    </script>
+
+  </body>
+
+</html>

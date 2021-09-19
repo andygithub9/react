@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>f4_new_lifecycle_get_snapshot_before_update</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Count extends React.Component {
+        constructor(prop) {
+          console.log('Count - constructor');
+          super(prop);
+        }
+
+        state = { clickCount: 0 };
+
+        // 點擊 +1 按鈕的回調
+        addClickCount = () => {
+          let { clickCount } = this.state;
+          clickCount++;
+          this.setState({ clickCount });
+        }
+
+        // 卸載組件的回調
+        suicide = () => ReactDOM.unmountComponentAtNode(document.getElementById('test'))
+
+        // 強制更新按鈕的回調
+        myForceUpdate = () => this.forceUpdate();
+
+        // 從 props 獲取派生狀態的鉤子
+        static getDerivedStateFromProps(props, state) {
+          console.log(`Count - getDerivedStateFromProps`, props, state);
+          return null;
+        }
+
+        // 判斷組件應不應該被更新的鉤子 (閥門)
+        shouldComponentUpdate() { console.log('Count - shouldComponentUpdate'); return true; }
+
+        // 渲染組件的鉤子
+        render() {
+          console.log('Count - render');
+          const { clickCount } = this.state
+          const { addClickCount, suicide, myForceUpdate } = this
+          return (
+            <div>
+              <h2>目前點擊了{clickCount}次</h2> {/* {屬性: 變數} 當屬性與變數同名時可以簡寫成: {屬性} */}
+              <button onClick={addClickCount}>點我+1</button>
+              <button onClick={suicide}>卸載此組件</button>
+              <button onClick={myForceUpdate}>forceUpdate 強制更新</button>
+            </div>
+          )
+        }
+
+        // 在更新之前獲取快照
+        /*
+          getSnapshotBeforeUpdate() 在最近一次渲染輸出（提交到 DOM 節點）之前調用。
+          它使得組件能在發生更改之前從 DOM 中捕獲一些信息（例如，滾動位置）。
+          注意: 此生命週期方法的任何返回值將作為參數傳遞給 componentDidUpdate()。
+
+          此用法並不常見，但它可能出現在 UI 處理中，如需要以特殊方式處理滾動位置的聊天線程等。
+
+          Warning: Count.getSnapshotBeforeUpdate(): A snapshot value (or null) must be returned. You have returned undefined.
+          警告: Count.getSnapshotBeforeUpdate(): 必須返回一個快照值 (or null) 。 但是你返回 undefined 。
+        */
+        getSnapshotBeforeUpdate(prevProps, prevState) {
+          console.log('Count - getSnapshotBeforeUpdate : ', ', prevProps : ', prevProps, ', prevState : ', prevState);
+          return { '快照值': '可以隨意自定義快照值' }
+        }
+
+        // 組件已掛載的鉤子
+        componentDidMount() { console.log('Count - componentDidMount'); }
+
+        // 組件已更新的鉤子
+        // componentDidUpdate 回調函數鉤子可以獲取三個參數, 1. 更新前的 props , 2. 更新前的 states , 
+        // 3. getSnapshotBeforeUpdate 回調函數鉤子傳遞過來的快照值: snapshot , 
+        componentDidUpdate(prevProps, prevState, snapshot) {
+          console.log('Count - componentDidUpdate : ', ', prevProps : ', prevProps, ', prevState : ', prevState, ', snapshot : ', snapshot);
+        }
+
+        // 組件將要被卸載
+        componentWillUnmount() { console.log('Count - componentWillUnmount'); }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Count clickCount={666} />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

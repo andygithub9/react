@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a1_js_vs_jsx</title>
+  </head>
+
+  <body>
+    <!-- 準備好一個容器 -->
+    <div>
+      為什麼要使用 jsx 而不是 js :
+      <p>
+        因為原本 html 會是巢狀嵌套的結構, 寫成 js 的話嵌套的結構會難以閱讀及編寫, 所以有了 jsx , jsx 需要通過 babel 編譯為 js ,
+        但是 jsx 可以簡化代碼且更易於閱讀
+      </p>
+    </div>
+    <div id="test"></div>
+    <div id="test2"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+
+    <script type="text/babel">
+      const VDOM = (
+        <h1 id="title">
+          <span>Hello , React</span>
+        </h1>
+      );
+      ReactDOM.render(VDOM, document.querySelector('#test'));
+    </script>
+
+    <script type="text/javascript">
+      //  React.createElemant(標籤名, {標籤屬性: 標籤屬性值, 標籤屬性: 標籤屬性值...}, 標籤內容)
+      const VDOM1 = React.createElement('h1', { id: 'title' }, React.createElement('span', {}, 'Hello , React2'));
+      ReactDOM.render(VDOM1, document.querySelector('#test2'));
+    </script>
+
+  </body>
+
+</html>

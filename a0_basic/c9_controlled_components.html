@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>c9_controlled_components</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      // 受控組件
+      // https://zh-hans.reactjs.org/docs/forms.html#controlled-components
+      class Demo extends React.Component {
+        // 初始化狀態
+        state = {
+          username: '',
+          password: ''
+        }
+
+        // onChange 觸發的回調函數, 通過 setState 方法更新狀態, 將用戶的值保存於狀態中
+        saveUsername = (e) => this.setState({ username: e.target.value })
+        savePassword = (e) => this.setState({ password: e.target.value })
+
+        submitHandler = (event) => {
+          event.preventDefault(); // 阻止表單提交預設事件
+          const { username, password } = this.state;
+          alert(`用戶名 : ${username} , 密碼 : ${password}`);
+        }
+
+        render() {
+          return (
+            <form onSubmit={this.submitHandler}>
+              {/* 不使用 ref 取得 input 的 value , 改為使用 onChange 觸發回調函數, 
+              只要 input 中的值更新就通過回調函數調用 setState 方法更新狀態  */}
+              用戶名 : <input onChange={this.saveUsername} name="username" type="text" />
+              密碼 : <input onChange={this.savePassword} name="password" type="password" />
+              <button>登入</button>
+            </form>
+          )
+        }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Demo />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

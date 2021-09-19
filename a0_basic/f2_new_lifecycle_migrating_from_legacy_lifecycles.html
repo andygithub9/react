@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>f2_new_lifecycle_migrating_from_legacy_lifecycles</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+    <br />
+    <div id="test1"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // https://react.docschina.org/blog/2018/03/27/update-on-async-rendering.html
+      /*
+        遷移過時的生命週期
+
+        1. componentWillMount
+        2. componentWillReceiveProps
+        3. componentWillUpdate
+
+        這些生命週期方法經常被誤解和濫用；此外，我們預計，在異步渲染中，它們潛在的誤用問題可能更大。
+        我們將在即將發布的版本中為這些生命週期添加 "UNSAFE_" 前綴。 
+        （這裡的 "UNSAFE_" 不是指安全性，而是表示使用這些生命週期的代碼在 React 的未來版本中更有可能出現 bug，
+        尤其是在啟用異步渲染之後。）
+
+        1. UNSAFE_componentWillMount
+        2. UNSAFE_componentWillReceiveProps
+        3. UNSAFE_componentWillUpdate。 
+        （將同時支持舊的生命週期名稱和新別名。）
+
+        我們將引入兩個新的生命週期，靜態的 getDerivedStateFromProps 和 getSnapshotBeforeUpdate。
+      */
+      // 1. 創建類式組件
+      class Count extends React.Component {
+        constructor(prop) {
+          console.log('Count - constructor');
+          super(prop);
+        }
+
+        state = { clickCount: 0 };
+
+        // 點擊 +1 按鈕的回調
+        addClickCount = () => {
+          let { clickCount } = this.state;
+          clickCount++;
+          this.setState({ clickCount });
+        }
+
+        // 卸載組件的回調
+        suicide = () => ReactDOM.unmountComponentAtNode(document.getElementById('test'))
+
+        // 強制更新按鈕的回調
+        myForceUpdate = () => this.forceUpdate();
+
+        // 判斷組件應不應該被更新的鉤子 (閥門)
+        shouldComponentUpdate() { console.log('Count - shouldComponentUpdate'); return true; }
+
+        // 組件將要掛載的鉤子
+        UNSAFE_componentWillMount() { console.log('Count - UNSAFE_componentWillMount'); }
+
+        // 組件即將更新的鉤子
+        UNSAFE_componentWillUpdate() { console.log('Count - UNSAFE_componentWillUpdate'); }
+
+        // 渲染組件的鉤子
+        render() {
+          console.log('Count - render');
+          const { clickCount } = this.state
+          const { addClickCount, suicide, myForceUpdate } = this
+          return (
+            <div>
+              <h2>目前點擊了{clickCount}次</h2> {/* {屬性: 變數} 當屬性與變數同名時可以簡寫成: {屬性} */}
+              <button onClick={addClickCount}>點我+1</button>
+              <button onClick={suicide}>卸載此組件</button>
+              <button onClick={myForceUpdate}>forceUpdate 強制更新</button>
+            </div>
+          )
+        }
+
+        // 組件已掛載的鉤子
+        componentDidMount() { console.log('Count - componentDidMount'); }
+
+        // 組件已更新的鉤子
+        componentDidUpdate() { console.log('Count - componentDidUpdate'); }
+
+        // 組件將要被卸載
+        componentWillUnmount() { console.log('Count - componentWillUnmount'); }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Count />, document.getElementById('test'));
+
+      // 1. 創建類式組件
+      class A extends React.Component {
+        state = { carName: 'Benz' }
+
+        changeCar = () => this.setState({ carName: 'Audi' })
+
+        // 渲染組件的鉤子
+        render() {
+          const { carName } = this.state
+          const { changeCar } = this
+          return (
+            <div>
+              <div>我是 A 組件</div>
+              <button onClick={changeCar}>換車</button>
+              <B carName={carName}></B>
+            </div>
+          )
+        }
+      }
+
+      class B extends React.Component {
+        // 組件即將收到 props 的鉤子
+        UNSAFE_componentWillReceiveProps() { console.log('B - UNSAFE_componentWillReceiveProps'); }
+
+        // 渲染組件的鉤子
+        render() {
+          const { carName } = this.props
+          return (
+            <div>
+              {carName}
+            </div>
+          )
+        }
+
+        // 組件已更新的鉤子
+        componentDidUpdate() { console.log('B - componentDidUpdate'); }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<A />, document.getElementById('test1'));
+    </script>
+
+  </body>
+
+</html>

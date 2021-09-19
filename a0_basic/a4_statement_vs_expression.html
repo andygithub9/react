@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a4_statement_vs_expression</title>
+    <style>
+      .orange-title {
+        background-color: orange;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- 準備好一個容器 -->
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+
+    <script type="text/babel">
+      /*
+        JavaScript 語句類型又分為 陳述式 和 表達式。
+
+        陳述式 Statement (語句、 代碼) :
+            用於命令執行指定的一系列操作，最大的特徵是不會回傳結果。
+            常見陳述式:
+                宣告（var、function）
+                流程控制（block、if…else）
+                迴圈（for、for…in）
+
+        表達式 Expression :
+            又可稱為表示式、運算式，經常透過一些符號結合上下語句，並運算及回傳結果。 任何一段可以取得一個值的程式碼就是運算式(表達式)。
+            常見表達式:
+                1. a 
+                2. a + b
+                3. fn(1)
+                4. arr.map()
+
+        注意 : jsx 的大括號裡面只能放表達式
+      */
+
+      const myData = ['Angular', 'React', 'Vue'];
+      const VDOM = (
+        <div>
+          <h1>前端 js 框架列表</h1>
+          <ol>
+            {/* 注意 : jsx 的大括號裡面只能放表達式 */}
+            {/* 遍歷 jsx 對象時要給每個節點一個唯一鍵 */}
+            {/* react.development.js:245 Warning: Each child in a list should have a unique "key" prop. */}
+            {/* 警告: 每個清單裡的子節點必須要有一個唯一的 "key" 屬性 */}
+            {myData.map((item, idx) => <li key={idx}> {item} </li>)}
+          </ol>
+        </div>
+      );
+      ReactDOM.render(VDOM, document.getElementById('test'));
+
+    </script>
+
+  </body>
+
+</html>

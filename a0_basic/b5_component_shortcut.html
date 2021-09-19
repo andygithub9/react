@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>b5_component_shortcut</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Weather extends React.Component {
+        // constructor(props) {
+        //   super(props);
+        //   this.state = { isHot: true, wind: '微風' };
+        //   this.changeWeather = this.changeWeather.bind(this)
+        // }
+
+        // Weather 的組件實例對象是由 ReactDOM.render() 方法創建的, 在實例化時我們並沒有傳參數進去, 所以不需要構造函數, 直接賦值即可
+        state = { isHot: true, wind: '微風' };
+
+        render() {
+          const { isHot, wind } = this.state; // 通過解構賦值讀取狀態
+          return (<h1 onClick={this.changeWeather}>今天天氣很{isHot ? '炎熱' : '涼爽'}, 風的強度為{wind}</h1>);
+        }
+
+        // changeWeather() 方法會在哪裡? 因為下面是賦值語句, 將函數賦值給 changeWeather 屬性, 
+        // changeWeather 會在 Weather 類創建的實例對象本身上而不是 Weather 類創建的實例對象的原型對象上,
+        // 箭頭函數本身沒有 this , 箭頭函數會抓外層的 this 作為箭頭函數的 this , 外層的 this 指向的就是 Weather 類創建的實例對象,
+        // 所以箭頭函數會抓 Weather 類創建的實例對象作為此箭頭函數的 this 指向, 再將此箭頭函數賦給 changeWeather 屬性,
+        // changeWeather 屬性指向的箭頭函數的 this 就會指向 Weather 類創建的實例對象
+        changeWeather = () => {
+          const { isHot } = this.state;
+          this.setState({ isHot: !isHot });
+        }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Weather />, document.getElementById('test'));
+
+    </script>
+
+  </body>
+
+</html>

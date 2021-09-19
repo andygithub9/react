@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>c4_repeated_call_callback_function_type_refs_issue</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Demo extends React.Component {
+        state = { isHot: true }
+
+        changeWeather = () => {
+          const { h2 } = this
+          let { isHot } = this.state
+
+          isHot = !isHot
+          this.setState({ isHot: isHot })
+        }
+
+        // https://zh-hans.reactjs.org/docs/refs-and-the-dom.html#caveats-with-callback-refs
+        /*
+          關於回調 refs 的說明
+              如果 ref 回調函數是以內聯函數的方式定義的，在更新過程中它會被執行兩次，第一次傳入參數 null，然後第二次會傳入參數 DOM 元素。
+              這是因為在每次渲染時會創建一個新的函數實例，所以 React 清空舊的 ref 並且設置新的。
+              通過將 ref 的回調函數定義成 class 的綁定函數的方式可以避免上述問題，但是大多數情況下它是無關緊要的。
+              所以實務上普遍使用內聯回調函數形式的 refs 
+
+          點擊下面的 '點我切換天氣' 按鈕會發現控制台輸出 null 再輸出 DOM 元素，
+          這是因為在每次渲染時會創建一個新的函數實例，所以 React 清空舊的 ref 並且設置新的。
+        */
+        render() {
+          const { isHot } = this.state
+          return (
+            <div>
+              <h2 ref={currentNode => { this.h2 = currentNode; console.log(`currentNode : `, currentNode); }}>今天的天氣很{isHot ? '炎熱' : '涼爽'}</h2>
+              <button ref="btn1" onClick={this.changeWeather}>點我切換天氣</button>&nbsp;
+            </div>
+          )
+        }
+      }
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Demo />, document.getElementById('test'));
+    </script>
+
+  </body>
+
+</html>

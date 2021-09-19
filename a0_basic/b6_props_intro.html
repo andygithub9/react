@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>b6_props_intro</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+    <div id="test1"></div>
+    <div id="test2"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Person extends React.Component {
+        render() {
+          console.log(this);
+          const { name, age, sex } = this.props // 解構賦值
+          return (
+            <ul>
+              <li>姓名 : {name}</li>
+              <li>年齡 : {age}</li>
+              <li>性別 : {sex}</li>
+            </ul>
+          )
+        }
+      }
+
+      // 2. 渲染組件到頁面
+      // 組件標籤上的屬性和屬性值會傳到 Person 組件實例對象的 props 屬性
+      ReactDOM.render(<Person name='小紅' age='18' sex='男' />, document.getElementById('test'));
+      ReactDOM.render(<Person name='小成' age='19' sex='男' />, document.getElementById('test1'));
+      // ReactDOM.render(<Person name='小黃' age='20' sex='女' />, document.getElementById('test2'));
+
+      // 模擬 ajax 撈回來的資料通過 '...' 運算符放到 Person 組件標籤的屬性,  
+      const ajaxRes = { name: '小黃', age: '20', sex: '女' };
+      // ReactDOM.render(<Person name={ajaxRes.name} age={ajaxRes.age} sex={ajaxRes.sex} />, document.getElementById('test2'));
+
+      // 實際上原生 js 是不能展開對象的, 但是通過 react 和 babel 編譯可以在 jsx 的大括弧裡面展開對象, 只能用在標籤屬性的傳遞, 其他地方不行
+      // 注意 : {...ajaxRes} 這裡的大括弧並不是對象的大括弧, 而是在 jsx 語法中寫 js 的一個標示符
+      ReactDOM.render(<Person {...ajaxRes} />, document.getElementById('test2'));
+
+    </script>
+
+  </body>
+
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>b7_js_native_spread_syntax</title>
+  </head>
+
+  <body>
+    <script type="text/javascript">
+      // 參考資料 : https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Operators/Spread_syntax
+
+      const arr = [1, 2, 3];
+      const arr1 = [4, 5, 6];
+      console.log(`展開一個數組 : `, ...arr); // 展開一個數組
+      console.log(`連接數組 : `, [...arr, ...arr1]); // 連接數組
+
+      // 在函數中使用, 用來接收剩餘參數
+      function sum(...nums) {
+        console.log(`通過 '...' 展開語句會將剩餘的參數放到一個數組裡 : `, nums); // 通過 '...' 展開語句會將剩餘的參數放到一個數組裡
+        return nums.reduce((preValue, currentValue) => preValue + currentValue)
+      }
+      console.log(`在函數中使用, 用來接收剩餘參數 : `, sum(1, 2, 3, 4, 5));
+
+      const person = { name: 'Andy', age: 18 };
+      // 錯誤的寫法, 對象不能被展開
+      // console.log(...person); // Uncaught TypeError: Found non-callable @@iterator // 對象類型沒有 iterator 接口
+
+      // 構造字面量對象時使用展開語法
+      // 複製對象
+      let person1 = { ...person };
+      person1.name = 'Bob'
+      console.log(person);
+      console.log(person1);
+
+      // 複製對象通時添加跟修改屬性
+      const person2 = { ...person, name: 'Cindy', addr: '台北' };
+      console.log(person2);
+    </script>
+
+  </body>
+
+</html>

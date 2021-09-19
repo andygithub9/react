@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>b9_constraint_props_type_shortcut</title>
+  </head>
+
+  <body>
+
+    <div id="test"></div>
+    <div id="test1"></div>
+    <div id="test2"></div>
+
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.js"></script>
+    <script src="./js/prop-types.js"></script>
+
+    <script type="text/babel">
+      // 1. 創建類式組件
+      class Person extends React.Component {
+
+        // 通過 static 關鍵字將 propTypes 賦給 Person 類本身, 而不是 Person 類創建的實例對象
+        static propTypes = {
+          name: PropTypes.string.isRequired, // 限制 name 為字符串, isRequired 必傳
+          age: PropTypes.number, // 限制 age 為數值
+          sex: PropTypes.string, // 限制 sex 為數值
+          speak: PropTypes.func // 限制 speak 為函數
+        }
+
+        // 通過 static 關鍵字將 propTypes 賦給 Person 類本身, 而不是 Person 類創建的實例對象
+        static defaultProps = {
+          sex: '人有妖之心就是人妖', // sex 默認值為 '人有妖之心就是人妖'
+          age: -1 // age 默認值為 -1
+        }
+
+        render() {
+          console.log(this);
+          const { name, age, sex } = this.props // 解構賦值
+          return (
+            <ul>
+              <li>姓名 : {name}</li>
+              <li>年齡 : {age + 1}</li> {/* 所有年齡在顯示時都要 +1 */}
+              <li>性別 : {sex}</li>
+            </ul>
+          )
+        }
+      }
+
+
+      // 2. 渲染組件到頁面
+      ReactDOM.render(<Person name='小紅' age={18} sex='男' speak={speak} />, document.getElementById('test'));
+      ReactDOM.render(<Person name='小成' age={19} />, document.getElementById('test1'));
+      const ajaxRes = { name: '小黃', sex: '女' };
+      ReactDOM.render(<Person {...ajaxRes} />, document.getElementById('test2'));
+
+      function speak() { console.log('我說話了'); }
+    </script>
+
+  </body>
+
+</html>
