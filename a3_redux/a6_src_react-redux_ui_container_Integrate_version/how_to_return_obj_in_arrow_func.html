@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const returnNumber=()=>1; // 返回一個數字
+    console.log(returnNumber()); // 1
+    
+    const returnArray=()=>[1,2,3]; // 返回一個數組
+    console.log(returnArray()); // Array(3) [ 1, 2, 3 ]
+
+    const returnObjWrongWay =()=>{a:1}; // 會返回一個 undefined , 因為 js 會認為你的花括號不是對象的花括號, 而是函數體的花括號
+    console.log(returnObjWrongWay()); // undefined
+
+    const returnObjRightWay =()=>({a:1,b:2}); // 一行返回對象的正確寫法, 要用小括號包住返回的對象
+    console.log(returnObjRightWay()); // Object { a: 1, b: 2 }
+  </script>
+</body>
+</html>

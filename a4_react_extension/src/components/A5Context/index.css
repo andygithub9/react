@@ -1,0 +1,15 @@
+.parent {
+	width: 500px;
+	padding: 16px;
+	background-color: orange;
+}
+.child {
+	width: 100%;
+	padding: 16px;
+	background-color: skyblue;
+}
+.grand-son {
+	width: 100%;
+	padding: 16px;
+	background-color: rgb(232, 135, 235);
+}
